@@ -1,5 +1,5 @@
 # prostar-mppt-server
-Communicates with Morningstar Prostar MPPT solar charge controller and reads Modbus data. Can be used to send to a database like Firebase or to serve a monitoring app.
+Communicates with Morningstar Prostar MPPT solar charge controller and reads Modbus data. See how your solar array and battery are performing! Can be logged to a NoSQL database too like Firebase or MongoDB.
 
 You need:
 * A Morningstar Prostar MPPT Solar Charge Controller (any Morningstar controller should work, you'll just have to reconfigure the modbus registers
