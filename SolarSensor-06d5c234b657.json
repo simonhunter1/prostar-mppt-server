@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "solar-sensor",
+  "private_key_id": "06d5c234b65735cfe0886d8ef77d3772be4ae46f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC8fviUPfkaZnAD\nTOp/cQ4uxaa3hHWM7RT56l64kQR3HT/yqeoMyvwaBPa5grkG8orLRPky6uUONpnf\n2qorBVlvIxbU46jOEtih/cpzHktNbA9Waf1WXAaY5pYaUYsKvb14Ugq/zLCQXkZH\njVUqLEXc+8zQuyYTTjt9+I8miekss4aD2vCV2HtpA4nWOsYN+OLiH6581yQhFwss\nbQNaOOPo8w/KP9ZErcW6IMRPX4FGa6hZZ0bShs2x/1XAd9TBITV+vLEJsKM9NhZh\nzMYI8aii7pd7H35cME44oNGw3pJKSU4pCFGirHiauFeLqPBsRLEPeJagOf4/ORmk\nW/8uUutvAgMBAAECggEARn2jP2jnqdBKLmnKvisM1z/yJ2ohPbkBoa5ciuAsj9D/\n86NIVE1qtt5JWDnDMQ5uCjM6kCiYzVZs9/KBtcHz3qR8KtQScjJJEldjKObY2VTC\nbZoIdA3JJ8//rUr2WOd5HjBsNar6Eps25BY+FZ3l6Iy/3QVH6WtVwze7bPmhGiZJ\nV1VCCOaUBy2qdbi388knQR1O7U/g9d+rK+HbI4ecs3RAdpi6oFlCVZYtNqCg93m0\nnI9PuqbO3wHw9ArjxGXJWjlqPPGZxph0frpY0kZk/7RpUEYAa8dnLw2WiJfXRQvR\ncsi8PrCrHVHeQU8dGTrRvOzGaD3HfbLYCPrhE2bRPQKBgQD5S3zMsAvrK+v3oVLw\n8zoL1DS692UZcUg0/TztpeIr4mas72iWpr+YCJ9MpWIwSZ/o+TlHfr5vGnQcvt6q\na+YBcuZGuZfvM8BDXWz7ce2zDd5Fm4YtJJGwdYmTsEFOfcLYsiVSnft+jVgUKlw7\nwwGfjciYAn0ma85tEveT/fbsSwKBgQDBkNrCikE6dW1UzghbgpI6PvKXcw2gsJsN\np2MxlZRsIQHISTsFLKF8nWikExJKJmCGa2zGsrsH0bCbZX0nJOO8i8j/pXkp8Swh\noH37r+DdgoozhcP6sgkoxkjDQdNzmRoRRCmB2jdXt0PDI/3y3WqgEpyGtWJONrea\nCNSgmoA+7QKBgDwhuTimPjm7nm9cumTkRlwUE6QFiJ1addBSRSANo0Bym9Ga7d9o\n2U4Sxln2inibSbcoZmiYadbiyp8kaxEwdYpj7KeinMNV+EpHfsIn+O33qmWf3f2F\nlJ67uzOkkBweuaELV3VWJhOghF5Y2WaQ4xNZX8lK0GU0G9azfIR1/dmBAoGBAJ5A\n3OnCeRPfX7S/Agw3E3B1eIcj9JdU7F/cY3ftkDxbPAbRAGT5mUm1tBC42vIusCoV\n+Af3pnv9D0PtVMZFHcBQFNQWKJqG6ArSGU5F/DV9/ZmkGpeDKYPhoSmqTsOq/6nw\nLXNRwn9/gPIxIfWG2x7mOHzWHPpPOArCf3yS9Jj9AoGBAMlwzIQDAR7Melp8/3kw\nwD5XZrj+emXXzn4bsme17uAmI11A48MFJ9SeiNKHlpi8/gyse+RHD4R2DL2rB4fd\n+Z2kEC6hkAgpG0aysWli7pzE80DAo88NZ4JQJEnWExMSzLdsgJ/ogJpf75Bv2m3K\nTIzb1XcFf8t0TDy8K2xZY66h\n-----END PRIVATE KEY-----\n",
+  "client_email": "solar-sensor@appspot.gserviceaccount.com",
+  "client_id": "100242704117304016346",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/solar-sensor%40appspot.gserviceaccount.com"
+}

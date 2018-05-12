@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <title>Solarsocket</title>
+</head>
+<body>
+    <div id="energy">
+        Connected.
+    </div>
+
+ 
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      socket.on('message', function(msg){
+          console.log(msg);
+      });
+      socket.on('connect', () =>{
+          console.log('connected');
+      });
+    </script>
+</body>
+</html>
