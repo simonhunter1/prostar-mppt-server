@@ -9,14 +9,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.2",
+    "express": "^4.17.1",
     "firebase-admin": "^5.10.0",
-    "modbus-serial": "^7.1.5",
-    "nodemon": "^1.17.3",
-    "socket.io": "^2.0.4",
-    "vue": "^2.5.13"
+    "modbus-serial": "^7.6.0",
+    "nodemon": "^1.19.1",
+    "socket.io": "^2.2.0",
+    "vue": "^2.6.10"
   },
   "devDependencies": {
-    "webpack": "^4.0.1"
+    "webpack": "^4.33.0"
   }
 }
