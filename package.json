@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "firebase-admin": "^5.10.0",
     "modbus-serial": "^7.6.0",
     "nodemon": "^1.19.1",
