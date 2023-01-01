@@ -17,6 +17,6 @@
     "vue": "^2.6.10"
   },
   "devDependencies": {
-    "webpack": "^4.33.0"
+    "webpack": "^5.75.0"
   }
 }
