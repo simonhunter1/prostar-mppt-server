@@ -1,22 +1,44 @@
 {
-  "name": "solarsocket",
+  "name": "prostar-mppt-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "ProStar MPPT Solar Charge Controller monitoring server with real-time data via Socket.IO",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm install --production"
+  },
+  "keywords": [
+    "solar",
+    "mppt",
+    "prostar",
+    "monitoring",
+    "modbus",
+    "websocket",
+    "iot"
+  ],
   "author": "",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/simonhunter1/prostar-mppt-server.git"
+  },
   "dependencies": {
-    "express": "^4.17.1",
-    "firebase-admin": "^5.10.0",
-    "modbus-serial": "^7.6.0",
-    "nodemon": "^1.19.1",
-    "socket.io": "^2.2.0",
-    "vue": "^2.6.10"
+    "express": "^4.21.2",
+    "firebase-admin": "^13.6.0",
+    "modbus-serial": "^8.0.17",
+    "socket.io": "^4.8.1",
+    "vue": "^3.5.13"
   },
   "devDependencies": {
-    "webpack": "^4.33.0"
+    "nodemon": "^3.1.7",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4"
   }
 }
