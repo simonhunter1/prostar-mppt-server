@@ -12,31 +12,6 @@ var ModbusRTU = require("modbus-serial");
 
 var protocol = (process.env.PROTOCOL || "modbus").toLowerCase();
 
-// firebase stuff
-/*
-var admin = require('firebase-admin');
-
-
-var serviceAccount = require('./SolarSensor-06d5c234b657.json');
-
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://solar-sensor.firebaseio.com'
-  });
-var db = admin.firestore()
-// Add a new document in collection "cities"
-db.collection("datapoint").doc().set({
-    batteryVoltage: "28",
-    time: new Date(),
-})
-.then(function() {
-    console.log("Firebase document successfully written!");
-})
-.catch(function(error) {
-    console.error("Error writing document: ", error);
-});
-*/
-
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -484,7 +459,7 @@ function setupProtocol() {
 }
 
 function readModbusSnapshot() {
-  return modbusClient.readHoldingRegisters(0x0010, 48).then(function (data) {
+  return modbusClient.readHoldingRegisters(0x0010, 49).then(function (data) {
     if (!data) {
       return null;
     }
@@ -495,6 +470,8 @@ function readModbusSnapshot() {
       batteryVoltage: float16_to_float(data.data[2]).toFixed(2),
       chargeCurrent: float16_to_float(data.data[0]).toFixed(2),
       targetVoltage: float16_to_float(data.data[47]).toFixed(2),
+      powerOut: float16_to_float(data.data[44]).toFixed(2),
+      arrayMaxPower: float16_to_float(data.data[46]).toFixed(2),
     };
   });
 }
@@ -576,6 +553,10 @@ function solarStatus() {
             details.chargeCurrent + "A",
             "| targetVoltage:",
             details.targetVoltage + "V",
+            "| powerOut:",
+            details.powerOut + "W",
+            "| arrayMaxPower:",
+            details.arrayMaxPower + "W",
           );
         }
         if (connectionExists) {
