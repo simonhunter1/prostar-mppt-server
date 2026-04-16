@@ -1,29 +1,31 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
     <title>Solarsocket</title>
-</head>
-<body>
-    <div id="energy">
-        Connected.
-    </div>
-
- 
+  </head>
+  <body>
+    <div id="energy">Connected.</div>
 
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io();
-      socket.on('message', function(msg){
+      if (typeof io !== "function") {
+        console.error(
+          "Socket.IO client was not loaded. Start the server and open http://localhost:9001 instead of opening index.html via file://",
+        );
+      } else {
+        var socket = io();
+        socket.on("message", function (msg) {
           console.log(msg);
-      });
-      socket.on('connect', () =>{
-          console.log('connected');
-      });
+        });
+        socket.on("connect", () => {
+          console.log("connected");
+        });
+      }
     </script>
-</body>
+  </body>
 </html>
