@@ -69,3 +69,59 @@ Notes:
 
 - Modbus data is parsed into named fields (`arrayVoltage`, `batteryVoltage`, etc.).
 - MeterBus mode currently returns raw response bytes (`rawHex`) so you can confirm connectivity and frame content before adding model-specific parsing.
+
+## HTTP API
+
+The server now exposes lightweight JSON endpoints for Home Assistant and other local integrations:
+
+- `GET /api/health` returns service status, protocol, and poll stats.
+- `GET /api/status` returns latest telemetry in this format:
+
+```json
+{
+  "protocol": "modbus",
+  "pollCount": 123,
+  "updatedAt": "2026-08-29T12:34:56.000Z",
+  "data": {
+    "arrayCurrent": "5.42",
+    "arrayVoltage": "38.10",
+    "batteryVoltage": "13.64",
+    "chargeCurrent": "6.02",
+    "targetVoltage": "14.40",
+    "powerOut": "82.10",
+    "arrayMaxPower": "206.20",
+    "chargeState": 7
+  }
+}
+```
+
+## Home Assistant Custom Integration
+
+A standard Home Assistant custom integration is included at `custom_components/prostar_mppt`.
+
+### Install
+
+1. Copy `custom_components/prostar_mppt` into your Home Assistant config directory under `custom_components/`.
+2. Restart Home Assistant.
+3. In Home Assistant UI, go to **Settings -> Devices & Services -> Add Integration**.
+4. Search for **ProStar MPPT**.
+5. Enter the host/port where this Node server is running (default port is `9001`).
+
+### Entities Created
+
+The integration creates sensors for:
+
+- Array Voltage
+- Array Current
+- Array Max Power
+- Battery Voltage
+- Charge Current
+- Target Voltage
+- Power Out
+- Charge State (enum)
+
+### Notes
+
+- The integration uses local polling against `/api/status`.
+- Poll interval is configurable in integration options.
+- If the Node server has not yet read telemetry, `/api/status` returns HTTP `503` until data is available.

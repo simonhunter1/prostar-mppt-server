@@ -1,0 +1,11 @@
+{
+  "domain": "prostar_mppt",
+  "name": "ProStar MPPT",
+  "codeowners": ["@simonhunter1"],
+  "config_flow": true,
+  "documentation": "https://github.com/simonhunter1/prostar-mppt-server",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/simonhunter1/prostar-mppt-server/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

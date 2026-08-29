@@ -30,6 +30,32 @@ app.use(function (req, res, next) {
 app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
 });
+
+app.get("/api/health", function (_req, res) {
+  res.json({
+    ok: true,
+    protocol: protocol,
+    connectedClients: io.engine.clientsCount,
+    pollCount: pollCount,
+  });
+});
+
+app.get("/api/status", function (_req, res) {
+  if (!details || Object.keys(details).length === 0) {
+    res.status(503).json({
+      error: "No telemetry available yet",
+      protocol: protocol,
+    });
+    return;
+  }
+
+  res.json({
+    protocol: protocol,
+    pollCount: pollCount,
+    updatedAt: lastTelemetryAt,
+    data: details,
+  });
+});
 var connectionExists = false;
 var pollLoopStarted = false;
 var isShuttingDown = false;
@@ -142,9 +168,10 @@ modbusClient.on("error", function (error) {
   shutdownWithError("[modbus] client error", error);
 });
 
-var details = [];
+var details = {};
 var liveTableLines = 0;
 var pollCount = 0;
+var lastTelemetryAt = null;
 
 function clearLiveTable() {
   if (liveTableLines > 0) {
@@ -634,6 +661,7 @@ function solarStatus() {
     .then(function (data) {
       if (data) {
         details = data;
+        lastTelemetryAt = new Date().toISOString();
         if (protocol === "meterbus") {
           clearLiveTable();
           console.log(

@@ -1,0 +1,60 @@
+{
+  "title": "ProStar MPPT",
+  "config": {
+    "error": {
+      "cannot_connect": "Failed to connect to the ProStar server",
+      "unknown": "Unexpected error"
+    },
+    "step": {
+      "user": {
+        "title": "Connect to ProStar MPPT server",
+        "description": "Enter the host and port for your prostar-mppt-server.",
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "port": "Port",
+          "use_ssl": "Use HTTPS",
+          "scan_interval": "Scan interval (seconds)"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "ProStar MPPT options",
+        "data": {
+          "scan_interval": "Scan interval (seconds)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "array_voltage": {
+        "name": "Array Voltage"
+      },
+      "array_current": {
+        "name": "Array Current"
+      },
+      "array_max_power": {
+        "name": "Array Max Power"
+      },
+      "battery_voltage": {
+        "name": "Battery Voltage"
+      },
+      "charge_current": {
+        "name": "Charge Current"
+      },
+      "target_voltage": {
+        "name": "Target Voltage"
+      },
+      "power_out": {
+        "name": "Power Out"
+      },
+      "charge_state": {
+        "name": "Charge State"
+      }
+    }
+  }
+}
