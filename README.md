@@ -11,6 +11,20 @@ You need:
 
 Run the index.js file. It will poll the charge controller and emit messages through websockets that you can hook into.
 
+## Tests
+
+Run automated tests with:
+
+```bash
+npm test
+```
+
+Current test coverage includes:
+
+- Poller retry and backoff behavior
+- Poller max consecutive failure stop behavior
+- Modbus register to telemetry mapping
+
 ## Protocol Configuration
 
 The server now supports both `modbus` and `meterbus` modes.
@@ -64,6 +78,15 @@ Optional MeterBus settings:
 - `METERBUS_STOPBITS` (default `1`)
 - `METERBUS_PARITY` (default `none`)
 - `METERBUS_RESPONSE_WAIT_MS` (default `600`)
+
+## Polling Resilience Settings
+
+The poller now retries on transient read failures using exponential backoff.
+The process exits only after the configured number of consecutive failures.
+
+- `POLL_INTERVAL_MS` (default `1000`)
+- `POLL_MAX_CONSECUTIVE_ERRORS` (default `5`)
+- `POLL_BACKOFF_MAX_MS` (default `30000`)
 
 Notes:
 
