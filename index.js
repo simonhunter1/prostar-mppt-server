@@ -34,6 +34,28 @@ var connectionExists = false;
 var pollLoopStarted = false;
 var isShuttingDown = false;
 
+var CHARGE_STATE = {
+  0: "START",
+  1: "NIGHT_CHECK",
+  2: "DISCONNECT",
+  3: "NIGHT",
+  4: "FAULT",
+  5: "MPPT",
+  6: "ABSORPTION",
+  7: "FLOAT",
+  8: "EQUALIZE",
+  9: "SLAVE",
+  10: "FIXED",
+};
+
+function getChargeStateName(value) {
+  if (Object.prototype.hasOwnProperty.call(CHARGE_STATE, value)) {
+    return CHARGE_STATE[value];
+  }
+
+  return "UNKNOWN";
+}
+
 function shutdownWithError(context, error) {
   var errorMessage = error && error.message ? error.message : error;
 
@@ -85,22 +107,26 @@ function startPollingLoop() {
 
 io.on("connect", function (socket) {
   connectionExists = true;
+  clearLiveTable();
   console.log(
     "[socket] client connected:",
     socket.id,
     "| total clients:",
     io.engine.clientsCount,
   );
+  liveTableLines = 0;
   startPollingLoop();
 
   socket.on("disconnect", function () {
     connectionExists = false;
+    clearLiveTable();
     console.log(
       "[socket] client disconnected:",
       socket.id,
       "| total clients:",
       io.engine.clientsCount,
     );
+    liveTableLines = 0;
   });
 });
 // protocol clients
@@ -117,6 +143,80 @@ modbusClient.on("error", function (error) {
 });
 
 var details = [];
+var liveTableLines = 0;
+var pollCount = 0;
+
+function clearLiveTable() {
+  if (liveTableLines > 0) {
+    process.stdout.write("\x1b[" + liveTableLines + "A\x1b[0J");
+  }
+}
+
+function drawLiveTable(data) {
+  // Column widths (excluding border characters and single padding spaces)
+  var LABEL_W = 18; // label column content width
+  var VALUE_W = 27; // value column content width
+  // Total row width = │ + sp + LABEL_W + sp + │ + sp + VALUE_W + sp + │
+  //                 = 1 + 1 + 18 + 1 + 1 + 1 + 27 + 1 + 1 = 52
+  var TOTAL_W = 1 + 1 + LABEL_W + 1 + 1 + 1 + VALUE_W + 1 + 1; // 52
+
+  var now = new Date().toLocaleTimeString();
+  var lines = [];
+
+  function pad(str, len) {
+    str = String(str);
+    return str.length >= len
+      ? str.slice(0, len)
+      : str + " ".repeat(len - str.length);
+  }
+
+  function row(label, value) {
+    return "│ " + pad(label, LABEL_W) + " │ " + pad(value, VALUE_W) + " │";
+  }
+
+  // Segment widths for ┬ / ┼ / ┴  = border + padding + content + padding
+  var LEFT_SEG = 1 + LABEL_W + 1; // 20  (the ─s between left edge and divider)
+  var RIGHT_SEG = 1 + VALUE_W + 1; // 29  (the ─s between divider and right edge)
+
+  var top = "┌" + "─".repeat(LEFT_SEG) + "┬" + "─".repeat(RIGHT_SEG) + "┐";
+  var mid = "├" + "─".repeat(LEFT_SEG) + "┼" + "─".repeat(RIGHT_SEG) + "┤";
+  var bottom = "└" + "─".repeat(LEFT_SEG) + "┴" + "─".repeat(RIGHT_SEG) + "┘";
+
+  // Header spans the full width: TOTAL_W - 2 interior chars (the two │)
+  var headerInner = TOTAL_W - 2; // 50
+  var headerTop = "┌" + "─".repeat(headerInner) + "┐";
+  var header = "│ " + pad("ProStar MPPT  " + now, headerInner - 2) + " │";
+  // Bottom of header transitions into the two-column layout
+  var headerMid =
+    "└" + "─".repeat(LEFT_SEG) + "┬" + "─".repeat(RIGHT_SEG) + "┘";
+
+  lines.push(headerTop);
+  lines.push(header);
+  lines.push(headerMid);
+  lines.push(
+    row(
+      "Charge State",
+      getChargeStateName(data.chargeState) + " (" + data.chargeState + ")",
+    ),
+  );
+  lines.push(mid);
+  lines.push(row("Array Voltage", data.arrayVoltage + " V"));
+  lines.push(row("Array Current", data.arrayCurrent + " A"));
+  lines.push(row("Array Max Power", data.arrayMaxPower + " W"));
+  lines.push(mid);
+  lines.push(row("Battery Voltage", data.batteryVoltage + " V"));
+  lines.push(row("Charge Current", data.chargeCurrent + " A"));
+  lines.push(row("Target Voltage", data.targetVoltage + " V"));
+  lines.push(row("Power Out", data.powerOut + " W"));
+  lines.push(mid);
+  lines.push(
+    row("Poll #", pollCount + " | Clients: " + io.engine.clientsCount),
+  );
+  lines.push(bottom);
+
+  liveTableLines = lines.length;
+  process.stdout.write(lines.join("\n") + "\n");
+}
 
 // Try each baud rate in turn, and within each baud rate scan slave IDs 1-5
 // at the register addresses the ProStar MPPT is known to use.
@@ -472,6 +572,7 @@ function readModbusSnapshot() {
       targetVoltage: float16_to_float(data.data[47]).toFixed(2),
       powerOut: float16_to_float(data.data[44]).toFixed(2),
       arrayMaxPower: float16_to_float(data.data[46]).toFixed(2),
+      chargeState: data.data[17],
     };
   });
 }
@@ -525,7 +626,7 @@ function readMeterbusSnapshot() {
 setupProtocol();
 
 function solarStatus() {
-  console.log("[poll] tick | protocol:", protocol);
+  pollCount++;
   var readPromise =
     protocol === "meterbus" ? readMeterbusSnapshot() : readModbusSnapshot();
 
@@ -534,40 +635,20 @@ function solarStatus() {
       if (data) {
         details = data;
         if (protocol === "meterbus") {
+          clearLiveTable();
           console.log(
             "[meterbus] response bytes:",
             details.byteLength,
             "| raw hex:",
             details.rawHex,
           );
+          liveTableLines = 0;
         } else {
-          console.log(
-            "[modbus] data read -",
-            "arrayCurrent:",
-            details.arrayCurrent + "A",
-            "| arrayVoltage:",
-            details.arrayVoltage + "V",
-            "| batteryVoltage:",
-            details.batteryVoltage + "V",
-            "| chargeCurrent:",
-            details.chargeCurrent + "A",
-            "| targetVoltage:",
-            details.targetVoltage + "V",
-            "| powerOut:",
-            details.powerOut + "W",
-            "| arrayMaxPower:",
-            details.arrayMaxPower + "W",
-          );
+          clearLiveTable();
+          drawLiveTable(details);
         }
         if (connectionExists) {
-          console.log(
-            "[socket] sending message to",
-            io.engine.clientsCount,
-            "client(s)",
-          );
           io.sockets.emit("message", details);
-        } else {
-          console.log("[socket] no clients connected, skipping emit");
         }
       } else {
         console.log("[" + protocol + "] no data returned");
