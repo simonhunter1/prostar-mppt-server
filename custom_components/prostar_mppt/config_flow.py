@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from ipaddress import ip_address
 from typing import Any
 
 import voluptuous as vol
@@ -15,6 +16,7 @@ from .api import ProstarMpptApiClient, ProstarMpptApiError
 from .const import (
     CONF_SCAN_INTERVAL,
     CONF_USE_SSL,
+    DEFAULT_HOST,
     DEFAULT_NAME,
     DEFAULT_PORT,
     DEFAULT_SCAN_INTERVAL,
@@ -23,6 +25,15 @@ from .const import (
     MAX_SCAN_INTERVAL,
     MIN_SCAN_INTERVAL,
 )
+
+
+def _validate_ip(value: str) -> str:
+    """Validate that value is a valid IP address."""
+    try:
+        ip_address(value)
+    except ValueError as err:
+        raise vol.Invalid("invalid_ip") from err
+    return value
 
 
 async def _validate_connection(hass, data: dict[str, Any]) -> None:
@@ -44,7 +55,10 @@ def _base_schema(user_input: dict[str, Any] | None = None) -> vol.Schema:
     return vol.Schema(
         {
             vol.Required(CONF_NAME, default=user_input.get(CONF_NAME, DEFAULT_NAME)): str,
-            vol.Required(CONF_HOST, default=user_input.get(CONF_HOST, "localhost")): str,
+            vol.Required(
+                CONF_HOST,
+                default=user_input.get(CONF_HOST, DEFAULT_HOST),
+            ): vol.All(str, _validate_ip),
             vol.Required(CONF_PORT, default=user_input.get(CONF_PORT, DEFAULT_PORT)): int,
             vol.Required(
                 CONF_USE_SSL,
@@ -80,6 +94,8 @@ class ProstarMpptConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
             except ProstarMpptApiError:
                 errors["base"] = "cannot_connect"
+            except vol.Invalid:
+                errors["base"] = "invalid_ip"
             except Exception:
                 errors["base"] = "unknown"
 

@@ -3,15 +3,16 @@
   "config": {
     "error": {
       "cannot_connect": "Failed to connect to the ProStar server",
+      "invalid_ip": "Enter a valid IP address",
       "unknown": "Unexpected error"
     },
     "step": {
       "user": {
         "title": "Connect to ProStar MPPT server",
-        "description": "Enter the host and port for your prostar-mppt-server.",
+        "description": "Enter the IP address and port for your prostar-mppt-server.",
         "data": {
           "name": "Name",
-          "host": "Host",
+          "host": "IP address",
           "port": "Port",
           "use_ssl": "Use HTTPS",
           "scan_interval": "Scan interval (seconds)"
