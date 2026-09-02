@@ -25,6 +25,9 @@
       "init": {
         "title": "ProStar MPPT options",
         "data": {
+          "host": "IP address",
+          "port": "Port",
+          "use_ssl": "Use HTTPS",
           "scan_interval": "Scan interval (seconds)"
         }
       }

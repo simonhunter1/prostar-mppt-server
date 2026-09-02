@@ -17,12 +17,16 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up ProStar MPPT from a config entry."""
+    host = entry.options.get(CONF_HOST, entry.data[CONF_HOST])
+    port = entry.options.get(CONF_PORT, entry.data[CONF_PORT])
+    use_ssl = entry.options.get(CONF_USE_SSL, entry.data.get(CONF_USE_SSL, False))
+
     session = async_get_clientsession(hass)
     api = ProstarMpptApiClient(
         session=session,
-        host=entry.data[CONF_HOST],
-        port=entry.data[CONF_PORT],
-        use_ssl=entry.data.get(CONF_USE_SSL, False),
+        host=host,
+        port=port,
+        use_ssl=use_ssl,
     )
     coordinator = ProstarMpptDataUpdateCoordinator(hass, entry, api)
     await coordinator.async_config_entry_first_refresh()

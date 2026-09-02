@@ -121,10 +121,32 @@ class ProstarMpptOptionsFlow(config_entries.OptionsFlow):
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None):
         """Manage options."""
+        errors: dict[str, str] = {}
+
         if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
+            try:
+                await _validate_connection(self.hass, user_input)
+                return self.async_create_entry(title="", data=user_input)
+            except ProstarMpptApiError:
+                errors["base"] = "cannot_connect"
+            except vol.Invalid:
+                errors["base"] = "invalid_ip"
+            except Exception:
+                errors["base"] = "unknown"
 
         current = {
+            CONF_HOST: self.config_entry.options.get(
+                CONF_HOST,
+                self.config_entry.data.get(CONF_HOST, DEFAULT_HOST),
+            ),
+            CONF_PORT: self.config_entry.options.get(
+                CONF_PORT,
+                self.config_entry.data.get(CONF_PORT, DEFAULT_PORT),
+            ),
+            CONF_USE_SSL: self.config_entry.options.get(
+                CONF_USE_SSL,
+                self.config_entry.data.get(CONF_USE_SSL, DEFAULT_USE_SSL),
+            ),
             CONF_SCAN_INTERVAL: self.config_entry.options.get(
                 CONF_SCAN_INTERVAL,
                 self.config_entry.data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
@@ -136,6 +158,18 @@ class ProstarMpptOptionsFlow(config_entries.OptionsFlow):
             data_schema=vol.Schema(
                 {
                     vol.Required(
+                        CONF_HOST,
+                        default=current[CONF_HOST],
+                    ): vol.All(str, _validate_ip),
+                    vol.Required(
+                        CONF_PORT,
+                        default=current[CONF_PORT],
+                    ): int,
+                    vol.Required(
+                        CONF_USE_SSL,
+                        default=current[CONF_USE_SSL],
+                    ): bool,
+                    vol.Required(
                         CONF_SCAN_INTERVAL,
                         default=current[CONF_SCAN_INTERVAL],
                     ): vol.All(
@@ -144,4 +178,5 @@ class ProstarMpptOptionsFlow(config_entries.OptionsFlow):
                     ),
                 }
             ),
+            errors=errors,
         )
